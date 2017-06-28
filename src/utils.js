@@ -133,39 +133,39 @@ function _maybeAddToCouchpotato(options) {
 	}
 	chrome.runtime.sendMessage({
 		type: 'VIEW_COUCHPOTATO',
-		url: `${config.couchpotatoUrl}/api/movie?apikey=${config.couchpotatoToken}`,
+		url: `${config.couchpotatoUrl}/api/movie`,
 		itemOptions: options,
 		basicAuth: config.couchpotatoBasicAuth,
 	}, (res) => {
 		const movieExists = res.success;
 		if (res.err) {
-			showNotification('warning', 'CouchPotato request failed (look in DevTools for more info)');
-			console.error('Error with viewing on CouchPotato:', res.err);
+			showNotification('warning', 'Radarr request failed (look in DevTools for more info)');
+			console.error('Error with viewing on Radarr:', res.err);
 			return;
 		}
 		if (!movieExists) {
 			_addToCouchPotatoRequest(options);
 			return;
 		}
-		showNotification('info', `Movie is already in CouchPotato (status: ${res.status})`);
+		showNotification('info', `Movie is already in Radarr (status: ${res.status})`);
 	});
 }
 
 function _addToCouchPotatoRequest(options) {
 	chrome.runtime.sendMessage({
 		type: 'ADD_COUCHPOTATO',
-		url: `${config.couchpotatoUrl}/api/movie?apikey=${config.couchpotatoToken}`,
+		url: `${config.couchpotatoUrl}/api/movie`,
 		itemOptions: options,
 		basicAuth: config.couchpotatoBasicAuth,
 	}, (res) => {
 		if (res.err) {
-			showNotification('warning', 'Could not add to CouchPotato.' + res.err);
-			console.error('Error with adding on CouchPotato:', res.err);
+			showNotification('warning', 'Could not add to Radarr.' + res.err);
+			console.error('Error with adding on Radarr:', res.err);
 			return;
 		} else if (res.success) {
-			showNotification('info', 'Added movie on CouchPotato.');
+			showNotification('info', 'Added movie on Radarr.');
 		} else {
-			showNotification('warning', 'Could not add to CouchPotato. Unknown Error');
+			showNotification('warning', 'Could not add to Radarr. Unknown Error');
 		}
 	});
 }

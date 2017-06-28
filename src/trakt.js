@@ -63,8 +63,12 @@ function initPlexThingy(type) {
 	const title = $title.dataset.topTitle;
 	const year = parseInt($year.textContent.trim());
 	const imdbId = getImdbId();
-
-	findPlexMedia({ type, title, year, button: $button, imdbId });
+	fetch('https://api.themoviedb.org/3/find/' + imdbId + '?api_key=' + config.tmdbToken + '&language=en-US&external_source=imdb_id').then(function(resp) {
+		return resp.json()
+	}).then(function(json) {
+		const tmdbId = (json && json.movie_results && json.movie_results.length) ? json.movie_results[0].id : null;
+		findPlexMedia({ type, title, year, button: $button, imdbId, tmdbId });
+	})
 }
 
 parseOptions().then(() => {
@@ -72,4 +76,3 @@ parseOptions().then(() => {
 	window.addEventListener('pushstate-changed', init);
 	init();
 });
-

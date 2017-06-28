@@ -49,7 +49,12 @@ function initPlexMovie() {
 	const title = $title.childNodes[0].textContent.trim();
 	const year = cleanYear($year.textContent);
 
-	findPlexMedia({ type: 'movie', title, year, button: $button, imdbId });
+	fetch('https://api.themoviedb.org/3/find/' + imdbId + '?api_key=' + config.tmdbToken + '&language=en-US&external_source=imdb_id').then(function(resp) {
+		return resp.json()
+	}).then(function(json) {
+		const tmdbId = (json && json.movie_results && json.movie_results.length) ? json.movie_results[0].id : null;
+		findPlexMedia({ type: 'movie', title, year, button: $button, imdbId, tmdbId });
+	});
 }
 
 function initPlexShow() {
@@ -68,7 +73,12 @@ function initPlexShow() {
 	const title = $title.textContent.trim();
 	const year = parseInt(dateMatch[1]);
 
-	findPlexMedia({ type: 'show', title, year, button: $button, imdbId });
+	fetch('https://api.themoviedb.org/3/find/' + imdbId + '?api_key=' + config.tmdbToken + '&language=en-US&external_source=imdb_id').then(function(resp) {
+		return resp.json()
+	}).then(function(json) {
+		const tmdbId = (json && json.movie_results && json.movie_results.length) ? json.movie_results[0].id : null;
+		findPlexMedia({ type: 'show', title, year, button: $button, imdbId, tmdbId });
+	});
 }
 
 function addInListItem(el) {
@@ -89,7 +99,12 @@ function addInListItem(el) {
 	const year = cleanYear($date.textContent);
 	const myImdbId = $imdbId.dataset.tconst;
 
-	findPlexMedia({ type, title, year, button: $button, imdbId: myImdbId });
+	fetch('https://api.themoviedb.org/3/find/' + imdbId + '?api_key=' + config.tmdbToken + '&language=en-US&external_source=imdb_id').then(function(resp) {
+		return resp.json()
+	}).then(function(json) {
+		const tmdbId = (json && json.movie_results && json.movie_results.length) ? json.movie_results[0].id : null;
+		findPlexMedia({ type, title, year, button: $button, imdbId: myImdbId, tmdbId });
+	});
 }
 
 function initList() {

@@ -50,7 +50,6 @@ function initPlexThingy() {
 	const title = $title.dataset.title.trim();
 	const year = parseInt($date.content.slice(0, 4));
 	const imdbId = getImdbId();
-	console.warn(config);
 	fetch('https://api.themoviedb.org/3/find/' + imdbId + '?api_key=' + config.tmdbToken + '&language=en-US&external_source=imdb_id').then(function(resp) {
 		return resp.json()
 	}).then(function(json) {
