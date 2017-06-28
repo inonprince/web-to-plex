@@ -173,7 +173,7 @@ function _addToCouchPotatoRequest(options) {
 function modifyPlexButton(el, action, title, options) {
 	el.style.removeProperty('display');
 	if (action === 'found') {
-		el.href = getPlexMediaUrl(config.server.id, options.imdbId);
+		el.href = getPlexMediaUrl(config.server.id, options.key);
 		el.textContent = 'On Plex';
 		el.classList.add('web-to-plex-button--found');
 	}
@@ -202,7 +202,7 @@ function findPlexMedia(options) {
 	getPlexMediaRequest(options)
 	.then(({ found, key }) => {
 		if (found) {
-			modifyPlexButton(options.button, 'found', 'Found on Plex', key);
+			modifyPlexButton(options.button, 'found', 'Found on Plex', {key});
 		} else {
 			const showCouchpotato = config.couchpotatoUrl && options.type !== 'show';
 			const action = showCouchpotato ? 'couchpotato' : 'notfound';

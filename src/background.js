@@ -57,7 +57,6 @@ function addCouchpotato(request, sendResponse) {
 	})
 	.then(res => res.json())
 	.then((res) => {
-		console.warn(res);
 		if (res && res[0] && res[0].errorMessage) {
 			sendResponse({ err: res[0].errorMessage });
 		} else if (res && res.path) {
