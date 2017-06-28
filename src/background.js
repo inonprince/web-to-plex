@@ -34,7 +34,7 @@ function addRadarr(request, sendResponse) {
 		headers: {
 			Accept: 'application/json',
 			'Content-Type': 'application/json',
-			'X-Api-Key': '6f68e841682049d9bbc4694707c56a0a',
+			'X-Api-Key': request.radarrToken,
 		},
 		body: JSON.stringify({
 			title: request.itemOptions.title,

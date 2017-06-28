@@ -135,7 +135,7 @@ function _maybeAddToRadarr(options) {
 		type: 'VIEW_RADARR',
 		url: `${config.radarrUrl}/api/movie`,
 		itemOptions: options,
-		basicAuth: config.radarrBasicAuth,
+		radarrToken: config.radarrToken,
 	}, (res) => {
 		const movieExists = res.success;
 		if (res.err) {
@@ -156,7 +156,7 @@ function _addToRadarrRequest(options) {
 		type: 'ADD_RADARR',
 		url: `${config.radarrUrl}/api/movie`,
 		itemOptions: options,
-		basicAuth: config.radarrBasicAuth,
+		radarrToken: config.radarrToken,
 	}, (res) => {
 		if (res.err) {
 			showNotification('warning', 'Could not add to Radarr.' + res.err);
