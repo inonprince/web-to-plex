@@ -92,6 +92,7 @@ function saveOptions() {
 	const plexToken = document.getElementById('plex_token').value;
 	const couchpotatoUrlRoot = document.getElementById('couchpotato_url_root').value;
 	const couchpotatoToken = document.getElementById('couchpotato_token').value;
+	const tmdbToken = document.getElementById('tmdb_token').value;
 	const couchpotatoBasicAuthUsername = document.getElementById('couchpotato_basic_auth_username').value;
 	const couchpotatoBasicAuthPassword = document.getElementById('couchpotato_basic_auth_password').value;
 
@@ -135,6 +136,7 @@ function saveOptions() {
 		}],
 		couchpotatoUrlRoot,
 		couchpotatoToken,
+		tmdbToken,
 		couchpotatoBasicAuthUsername,
 		couchpotatoBasicAuthPassword,
 	};
@@ -155,6 +157,7 @@ function restoreOptions() {
 		document.getElementById('plex_token').value = items.plexToken || '';
 		document.getElementById('couchpotato_url_root').value = items.couchpotatoUrlRoot || '';
 		document.getElementById('couchpotato_token').value = items.couchpotatoToken || '';
+		document.getElementById('tmdb_token').value = items.tmdbToken || '';
 		document.getElementById('couchpotato_basic_auth_username').value = items.couchpotatoBasicAuthUsername || '';
 		document.getElementById('couchpotato_basic_auth_password').value = items.couchpotatoBasicAuthPassword || '';
 

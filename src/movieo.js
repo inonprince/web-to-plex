@@ -1,4 +1,4 @@
-/* global parseOptions, showNotification, modifyPlexButton, findPlexMedia */
+/* global config, parseOptions, showNotification, modifyPlexButton, findPlexMedia */
 function isMoviePage() {
 	const path = window.location.pathname;
 	if (!path.startsWith('/movies/')) {
@@ -50,8 +50,13 @@ function initPlexThingy() {
 	const title = $title.dataset.title.trim();
 	const year = parseInt($date.content.slice(0, 4));
 	const imdbId = getImdbId();
-
-	findPlexMedia({ title, year, button: $button, imdbId });
+	console.warn(config);
+	fetch('https://api.themoviedb.org/3/find/' + imdbId + '?api_key=' + config.tmdbToken + '&language=en-US&external_source=imdb_id').then(function(resp) {
+		return resp.json()
+	}).then(function(json) {
+		const tmdbId = (json && json.movie_results && json.movie_results.length) ? json.movie_results[0].id : null;
+		findPlexMedia({ title, year, button: $button, imdbId, tmdbId });
+	});
 }
 
 function renderPlexButton() {

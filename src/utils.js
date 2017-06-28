@@ -60,6 +60,7 @@ function _getOptions() {
 			// allow multiple for easy migration in the future.
 			const options = {
 				server: items.servers[0],
+				tmdbToken: items.tmdbToken,
 			};
 			if (items.couchpotatoBasicAuthUsername) {
 				options.couchpotatoBasicAuth = {
@@ -68,7 +69,8 @@ function _getOptions() {
 				};
 			}
 			if (items.couchpotatoUrlRoot && items.couchpotatoToken) {
-				options.couchpotatoUrl = `${items.couchpotatoUrlRoot}/api/${encodeURIComponent(items.couchpotatoToken)}`;
+				options.couchpotatoUrl = items.couchpotatoUrlRoot;
+				options.couchpotatoToken = items.couchpotatoToken;
 			}
 
 			resolve(options);
@@ -124,15 +126,15 @@ function showNotification(state, text, timeout) {
 	}, timeout || 5000);
 }
 
-function _maybeAddToCouchpotato(imdbId) {
-	if (!imdbId) {
+function _maybeAddToCouchpotato(options) {
+	if (!options.tmdbId) {
 		console.log('Cancelled adding to CouchPotato since there is no IMDB ID');
 		return;
 	}
 	chrome.runtime.sendMessage({
 		type: 'VIEW_COUCHPOTATO',
-		url: `${config.couchpotatoUrl}/media.get`,
-		imdbId,
+		url: `${config.couchpotatoUrl}/api/movie?apikey=${config.couchpotatoToken}`,
+		itemOptions: options,
 		basicAuth: config.couchpotatoBasicAuth,
 	}, (res) => {
 		const movieExists = res.success;
@@ -142,37 +144,36 @@ function _maybeAddToCouchpotato(imdbId) {
 			return;
 		}
 		if (!movieExists) {
-			_addToCouchPotatoRequest(imdbId);
+			_addToCouchPotatoRequest(options);
 			return;
 		}
 		showNotification('info', `Movie is already in CouchPotato (status: ${res.status})`);
 	});
 }
 
-function _addToCouchPotatoRequest(imdbId) {
+function _addToCouchPotatoRequest(options) {
 	chrome.runtime.sendMessage({
 		type: 'ADD_COUCHPOTATO',
-		url: `${config.couchpotatoUrl}/movie.add`,
-		imdbId,
+		url: `${config.couchpotatoUrl}/api/movie?apikey=${config.couchpotatoToken}`,
+		itemOptions: options,
 		basicAuth: config.couchpotatoBasicAuth,
 	}, (res) => {
 		if (res.err) {
-			showNotification('warning', 'Could not add to CouchPotato (look in DevTools for more info)');
+			showNotification('warning', 'Could not add to CouchPotato.' + res.err);
 			console.error('Error with adding on CouchPotato:', res.err);
 			return;
-		}
-		if (res.success) {
+		} else if (res.success) {
 			showNotification('info', 'Added movie on CouchPotato.');
 		} else {
-			showNotification('warning', 'Could not add to CouchPotato.');
+			showNotification('warning', 'Could not add to CouchPotato. Unknown Error');
 		}
 	});
 }
 
-function modifyPlexButton(el, action, title, key) {
+function modifyPlexButton(el, action, title, options) {
 	el.style.removeProperty('display');
 	if (action === 'found') {
-		el.href = getPlexMediaUrl(config.server.id, key);
+		el.href = getPlexMediaUrl(config.server.id, options.imdbId);
 		el.textContent = 'On Plex';
 		el.classList.add('web-to-plex-button--found');
 	}
@@ -187,7 +188,8 @@ function modifyPlexButton(el, action, title, key) {
 		el.classList.add('web-to-plex-button--couchpotato');
 		el.addEventListener('click', (e) => {
 			e.preventDefault();
-			_maybeAddToCouchpotato(key);
+			// _maybeAddToCouchpotato(options);
+			_addToCouchPotatoRequest(options)
 		});
 	}
 
@@ -205,7 +207,7 @@ function findPlexMedia(options) {
 			const showCouchpotato = config.couchpotatoUrl && options.type !== 'show';
 			const action = showCouchpotato ? 'couchpotato' : 'notfound';
 			const title = showCouchpotato ? 'Could not find, add on Couchpotato?' : 'Could not find on Plex';
-			modifyPlexButton(options.button, action, title, options.imdbId);
+			modifyPlexButton(options.button, action, title, options);
 		}
 	})
 	.catch((err) => {

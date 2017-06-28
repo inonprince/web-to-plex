@@ -29,12 +29,41 @@ function viewCouchpotato(request, sendResponse) {
 }
 
 function addCouchpotato(request, sendResponse) {
-	fetch(`${request.url}?identifier=${request.imdbId}`, {
-		headers: generateHeaders(request.basicAuth),
+	fetch(request.url, {
+		method: 'post',
+		headers: {
+			Accept: 'application/json',
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify({
+			title: request.itemOptions.title,
+			year: request.itemOptions.year,
+			profileId: '6',
+			monitored: true,
+			minimumAvailability: 'preDB',
+			tmdbId: request.itemOptions.tmdbId,
+			titleSlug: request.itemOptions.title,
+			qualityProfileId: 0,
+			rootFolderPath: '/home/plex/fused/movies/',
+			addOptions: {
+				searchForMovie: true,
+			},
+			images: [{
+				coverType: 'poster',
+				url: 'http://image.tmdb.org/t/p/original',
+			}],
+		}),
 	})
 	.then(res => res.json())
 	.then((res) => {
-		sendResponse({ success: res.success });
+		console.warn(res);
+		if (res && res[0] && res[0].errorMessage) {
+			sendResponse({ err: res[0].errorMessage });
+		} else if (res && res.path) {
+			sendResponse({ success: 'Added to ' + res.path });
+		} else {
+			sendResponse({ err: 'unknown error' });
+		}
 	})
 	.catch((err) => {
 		sendResponse({ err: String(err) });
