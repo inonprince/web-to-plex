@@ -13,8 +13,8 @@ function generateHeaders(auth) {
 // At this point you might want to think, WHY would you want to do
 // these requests in a background page instead of the content script?
 // This is because Movieo is served over HTTPS, so it won't accept requests to
-// HTTP servers. Unfortunately, many people use CouchPotato over HTTP.
-function viewCouchpotato(request, sendResponse) {
+// HTTP servers. Unfortunately, many people use Radarr over HTTP.
+function viewRadarr(request, sendResponse) {
 	fetch(`${request.url}?id=${request.imdbId}`, {
 		headers: generateHeaders(request.basicAuth),
 	})
@@ -28,7 +28,7 @@ function viewCouchpotato(request, sendResponse) {
 	});
 }
 
-function addCouchpotato(request, sendResponse) {
+function addRadarr(request, sendResponse) {
 	fetch(request.url, {
 		method: 'post',
 		headers: {
@@ -71,13 +71,13 @@ function addCouchpotato(request, sendResponse) {
 }
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-	if (request.type === 'VIEW_COUCHPOTATO') {
-		viewCouchpotato(request, sendResponse);
+	if (request.type === 'VIEW_RADARR') {
+		viewRadarr(request, sendResponse);
 		return true;
 	}
 
-	if (request.type === 'ADD_COUCHPOTATO') {
-		addCouchpotato(request, sendResponse);
+	if (request.type === 'ADD_RADARR') {
+		addRadarr(request, sendResponse);
 		return true;
 	}
 

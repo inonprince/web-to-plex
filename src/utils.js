@@ -62,15 +62,15 @@ function _getOptions() {
 				server: items.servers[0],
 				tmdbToken: items.tmdbToken,
 			};
-			if (items.couchpotatoBasicAuthUsername) {
-				options.couchpotatoBasicAuth = {
-					username: items.couchpotatoBasicAuthUsername,
-					password: items.couchpotatoBasicAuthPassword,
+			if (items.radarrBasicAuthUsername) {
+				options.radarrBasicAuth = {
+					username: items.radarrBasicAuthUsername,
+					password: items.radarrBasicAuthPassword,
 				};
 			}
-			if (items.couchpotatoUrlRoot && items.couchpotatoToken) {
-				options.couchpotatoUrl = items.couchpotatoUrlRoot;
-				options.couchpotatoToken = items.couchpotatoToken;
+			if (items.radarrUrlRoot && items.radarrToken) {
+				options.radarrUrl = items.radarrUrlRoot;
+				options.radarrToken = items.radarrToken;
 			}
 
 			resolve(options);
@@ -126,16 +126,16 @@ function showNotification(state, text, timeout) {
 	}, timeout || 5000);
 }
 
-function _maybeAddToCouchpotato(options) {
+function _maybeAddToRadarr(options) {
 	if (!options.tmdbId) {
-		console.log('Cancelled adding to CouchPotato since there is no IMDB ID');
+		console.log('Cancelled adding to Radarr since there is no IMDB ID');
 		return;
 	}
 	chrome.runtime.sendMessage({
-		type: 'VIEW_COUCHPOTATO',
-		url: `${config.couchpotatoUrl}/api/movie`,
+		type: 'VIEW_RADARR',
+		url: `${config.radarrUrl}/api/movie`,
 		itemOptions: options,
-		basicAuth: config.couchpotatoBasicAuth,
+		basicAuth: config.radarrBasicAuth,
 	}, (res) => {
 		const movieExists = res.success;
 		if (res.err) {
@@ -144,19 +144,19 @@ function _maybeAddToCouchpotato(options) {
 			return;
 		}
 		if (!movieExists) {
-			_addToCouchPotatoRequest(options);
+			_addToRadarrRequest(options);
 			return;
 		}
 		showNotification('info', `Movie is already in Radarr (status: ${res.status})`);
 	});
 }
 
-function _addToCouchPotatoRequest(options) {
+function _addToRadarrRequest(options) {
 	chrome.runtime.sendMessage({
-		type: 'ADD_COUCHPOTATO',
-		url: `${config.couchpotatoUrl}/api/movie`,
+		type: 'ADD_RADARR',
+		url: `${config.radarrUrl}/api/movie`,
 		itemOptions: options,
-		basicAuth: config.couchpotatoBasicAuth,
+		basicAuth: config.radarrBasicAuth,
 	}, (res) => {
 		if (res.err) {
 			showNotification('warning', 'Could not add to Radarr.' + res.err);
@@ -182,14 +182,14 @@ function modifyPlexButton(el, action, title, options) {
 		el.textContent = action === 'notfound' ? 'Not on Plex' : 'Plex error';
 		el.classList.remove('web-to-plex-button--found');
 	}
-	if (action === 'couchpotato') {
+	if (action === 'radarr') {
 		el.href = '#';
 		el.textContent = 'Download';
-		el.classList.add('web-to-plex-button--couchpotato');
+		el.classList.add('web-to-plex-button--radarr');
 		el.addEventListener('click', (e) => {
 			e.preventDefault();
-			// _maybeAddToCouchpotato(options);
-			_addToCouchPotatoRequest(options)
+			// _maybeAddToRadarr(options);
+			_addToRadarrRequest(options)
 		});
 	}
 
@@ -204,9 +204,9 @@ function findPlexMedia(options) {
 		if (found) {
 			modifyPlexButton(options.button, 'found', 'Found on Plex', {key});
 		} else {
-			const showCouchpotato = config.couchpotatoUrl && options.type !== 'show';
-			const action = showCouchpotato ? 'couchpotato' : 'notfound';
-			const title = showCouchpotato ? 'Could not find, add on Couchpotato?' : 'Could not find on Plex';
+			const showRadarr = config.radarrUrl && options.type !== 'show';
+			const action = showRadarr ? 'radarr' : 'notfound';
+			const title = showRadarr ? 'Could not find, add on Radarr?' : 'Could not find on Plex';
 			modifyPlexButton(options.button, action, title, options);
 		}
 	})

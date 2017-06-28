@@ -90,14 +90,14 @@ function saveOptions() {
 
 	// With a "user token" you can access multiple servers. A "normal" token is just for one server.
 	const plexToken = document.getElementById('plex_token').value;
-	const couchpotatoUrlRoot = document.getElementById('couchpotato_url_root').value;
-	const couchpotatoToken = document.getElementById('couchpotato_token').value;
+	const radarrUrlRoot = document.getElementById('radarr_url_root').value;
+	const radarrToken = document.getElementById('radarr_token').value;
 	const tmdbToken = document.getElementById('tmdb_token').value;
-	const couchpotatoBasicAuthUsername = document.getElementById('couchpotato_basic_auth_username').value;
-	const couchpotatoBasicAuthPassword = document.getElementById('couchpotato_basic_auth_password').value;
+	const radarrBasicAuthUsername = document.getElementById('radarr_basic_auth_username').value;
+	const radarrBasicAuthPassword = document.getElementById('radarr_basic_auth_password').value;
 
-	if (couchpotatoUrlRoot && (!couchpotatoUrlRoot.startsWith('http') || couchpotatoUrlRoot.endsWith('/'))) {
-		status.textContent = 'CouchPotato URL should start with "http" and end without a slash!';
+	if (radarrUrlRoot && (!radarrUrlRoot.startsWith('http') || radarrUrlRoot.endsWith('/'))) {
+		status.textContent = 'Radarr URL should start with "http" and end without a slash!';
 		return;
 	}
 
@@ -108,10 +108,10 @@ function saveOptions() {
 
 	// Dynamically asking permissions
 	// TODO: FireFox doesn't have support for chrome.permissions API.
-	if (couchpotatoUrlRoot && chrome.permissions) {
+	if (radarrUrlRoot && chrome.permissions) {
 		// When asking permissions the URL needs to have a trailing slash.
 		chrome.permissions.request({
-			origins: [`${couchpotatoUrlRoot}/`],
+			origins: [`${radarrUrlRoot}/`],
 		});
 	}
 
@@ -134,11 +134,11 @@ function saveOptions() {
 			token: serverToken,
 			url: serverUrl,
 		}],
-		couchpotatoUrlRoot,
-		couchpotatoToken,
+		radarrUrlRoot,
+		radarrToken,
 		tmdbToken,
-		couchpotatoBasicAuthUsername,
-		couchpotatoBasicAuthPassword,
+		radarrBasicAuthUsername,
+		radarrBasicAuthPassword,
 	};
 	storage.set(data, () => {
 		if (chrome.runtime.lastError) {
@@ -155,11 +155,11 @@ function saveOptions() {
 function restoreOptions() {
 	function setOptions(items) {
 		document.getElementById('plex_token').value = items.plexToken || '';
-		document.getElementById('couchpotato_url_root').value = items.couchpotatoUrlRoot || '';
-		document.getElementById('couchpotato_token').value = items.couchpotatoToken || '';
+		document.getElementById('radarr_url_root').value = items.radarrUrlRoot || '';
+		document.getElementById('radarr_token').value = items.radarrToken || '';
 		document.getElementById('tmdb_token').value = items.tmdbToken || '';
-		document.getElementById('couchpotato_basic_auth_username').value = items.couchpotatoBasicAuthUsername || '';
-		document.getElementById('couchpotato_basic_auth_password').value = items.couchpotatoBasicAuthPassword || '';
+		document.getElementById('radarr_basic_auth_username').value = items.radarrBasicAuthUsername || '';
+		document.getElementById('radarr_basic_auth_password').value = items.radarrBasicAuthPassword || '';
 
 		if (items.plexToken) {
 			performTest();
