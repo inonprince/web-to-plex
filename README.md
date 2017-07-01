@@ -1,3 +1,5 @@
+* This fork adds support for Radarr and PassThePopcorn
+
 # Web to Plex
 
 This browser extension adds a Plex button on [Movieo](http://movieo.me/), [IMDb](http://imdb.com/) and [Trakt.tv](https://trakt.tv/) pages, letting you immediately open the movie or TV show on Plex Web if it is available.
