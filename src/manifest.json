@@ -28,6 +28,11 @@
 			"matches": ["https://passthepopcorn.me/*"],
 			"js": ["history-hack.js", "utils.js", "ptp.js"],
 			"css": ["ptp.css"]
+		},
+		{
+			"matches": ["https://cinesift.com/*"],
+			"js": ["history-hack.js", "utils.js", "cinesift.js"],
+			"css": ["cinesift.css"]
 		}
 	],
 	"background": {
