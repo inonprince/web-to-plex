@@ -1,8 +1,17 @@
-* This fork adds support for Radarr and PassThePopcorn
+# This fork adds support for:
+* Radarr (download manager)
+* Cinesift
+* PassThePopcorn
 
 # Web to Plex
 
-This browser extension adds a Plex button on [Movieo](http://movieo.me/), [IMDb](http://imdb.com/), [Trakt.tv](https://trakt.tv/), and PassThePopcorn pages, letting you immediately open the movie or TV show on Plex Web if it is available.
+This browser extension adds a Plex button on the websites below, letting you immediately open the movie or TV show on Plex Web if it is available.
+
+* [Movieo](http://movieo.me/)
+* [IMDb](http://imdb.com/)
+* [Trakt.tv](https://trakt.tv/)
+* [Cinesift](https://cinesift.com/)
+* PassThePopcorn
 
 Optionally you can configure Radarr in the options. After that, you can immediately add a movie to Radarr, with one click, right from Movieo, IMDb or Trakt.tv.
 
