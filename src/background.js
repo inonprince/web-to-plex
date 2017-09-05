@@ -45,7 +45,7 @@ function addRadarr(request, sendResponse) {
 			tmdbId: request.itemOptions.tmdbId,
 			titleSlug: request.itemOptions.title,
 			qualityProfileId: 0,
-			rootFolderPath: '/home/plex/fused/movies/',
+			rootFolderPath: '/storage/Movies/',
 			addOptions: {
 				searchForMovie: true,
 			},
